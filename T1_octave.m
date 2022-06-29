@@ -11,7 +11,7 @@ To_st = 0.001;                    % Período do sinal de serra
 To_pwm = To_st;                     % Período do PWM = 1ms
 
 Ts = To_st/100;                 % Período de amostragem 100x menor = 10us
-NC_h = 6;                          % Número de cíclos h[n] amostrados
+NC_h = 20;                          % Número de cíclos h[n] amostrados
 
 f_h = 1/To_h;                       % Frequência h[n] = 100Hz
 f_st = 1/To_st;                 % Frequência Dente de serra = 1KHz
@@ -55,14 +55,22 @@ for n=1:NT+1
   else
     pwm(n) = 0;
   endif
+  x(n)=pwm(n);                  % Sinal PWM como entrada do sistema
+  for k=1:n                     % Convolução
+    if (k<n)
+      y(n) = y(n) + x(k) * h(n-k);
+    endif
+  endfor
 end
 
 %% Geração dos gráficos
-subplot(411)
+subplot(511)
 stem(t, h);
-subplot(412)
+subplot(512)
 stem(t, s);
-subplot(413)
+subplot(513)
 plot(t, st);
-subplot(414)
+subplot(514)
 stem(t, pwm);
+subplot(515);
+stem(t, y);
