@@ -28,6 +28,7 @@ TT = NT*Ts;                      % Tempo total do gráfico: 6000*10us = 60ms
 
 t = 0:Ts:TT;                    % Vetor de tempo
 nq = 0;                          % ?
+D = 0;                           % PWM Duty Cycle
 
 % Inicialização dos vetores
 h=zeros(1, NT+1);
@@ -39,23 +40,29 @@ y=zeros(1, NT+1);
 %Simulação
 for n=1:NT+1
   h(n) = A_h.*sin(2*pi.*f_h.*(Ts*n)).*e.^(-100*(Ts*n));
-  % Geração do sinal PWM:
-  nq = nq+1;
   s(n) = A_s.*sin(2*pi.*f_s.*(Ts*n));
+  % Geração do PWM:
+  nq = nq+1;
   if nq>NA
     st(n) = 0;
   endif
   if nq == NA
     nq = 0;
+  endif
+  st(n) = nq*(A_st_vpp/100)-(A_st_vpp/2);
+  if s(n) > st(n)
+    pwm(n) = A_cc;
   else
-    st(n) = nq*(A_st_vpp/100)-(A_st_vpp/2);
+    pwm(n) = 0;
   endif
 end
 
 %% Geração dos gráficos
-subplot(311)
+subplot(411)
 stem(t, h);
-subplot(312)
+subplot(412)
 stem(t, s);
-subplot(313)
+subplot(413)
 plot(t, st);
+subplot(414)
+stem(t, pwm);
