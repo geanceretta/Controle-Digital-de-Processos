@@ -41,39 +41,3 @@ end
 
 %% Geração dos gráficos
 stem(t, h);
-
-
-
-%z = e.^(-100*t);             % Taxa de decaímento
-%h = A.*sin(2*pi.*f.*t).*z; % Resposta ao impulso
-%stem(h);
-
-% PWM
-##A_ref = A;                           % Amplitude igual a da resposta ao impulso
-##f_ref = 10;                          % Frequência do sinal de referência = 10Hz
-##T_ref = 1/f_ref;                     % Período do sinal de referência = 100ms
-##sr_ref = T_ref/100;                  % Período de amostragem 100x menor
-##t_ref = 0:sr_ref:6*T_ref;             % Intervalo de amostragem contendo 6 períodos
-##
-##v_ref_t = A_ref*sin(2*pi*f_ref*t_ref);   % Sinal de referência
-%stem(v_ref_t)
-
-% DENTE DE SERRA
-% pkg install -forge control
-% pkg install -forge signal
-%pkg load signal
-
-%T_st = 0.001;                          % Período do sinal dente de serra
-%dente_serra = sawtooth(2*pi*f*t);
-%plot(t, dente_serra);
-
-%for i = 1:numel(t_ref):
-
-%% Resposta ao Impulso (h[n]
-%subplot(311)
-%stem(t,h,'r:','Linewidth',2);
-%subplot(312)
-%stem(t,x,'b:','Linewidth',2);
-%subplot(313)
-%stem(t,y,'b:','Linewidth',2);
-
