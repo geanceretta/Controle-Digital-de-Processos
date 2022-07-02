@@ -33,8 +33,11 @@ nq = 0;                          % Contador de pontos da portadora
 h=zeros(1, NT+1);
 s=zeros(1, NT+1);
 st=zeros(1, NT+1);
+pwm=zeros(1, NT+1);
 x=zeros(1, NT+1);
 y=zeros(1, NT+1);
+y_diff=zeros(1, NT+1);
+
 
 %Simulação
 for n=1:NT+1
@@ -64,10 +67,17 @@ for n=1:NT+1
   end
 end
 
-z=tf('z', Ts);
-z1=(exp(1)^Ts)*z;
-G=(z1*sin(Ts))/(z1^2-2*z1*cos(Ts)+1);
-[w,m]=step(G);
+% z1=exp(1)^Ts;
+% G=A_h*z1*sin(Ts)/(z1^2-2*z1*cos(Ts)+1);
+
+
+a = 2*exp(-100*Ts)*cos(2*pi*f_h*Ts);
+b = exp(-200*Ts);
+c = A_h*exp(-100*Ts)*sin(2*pi*f_h*Ts);
+
+for k=3:NT
+    y_diff(k) = a*y_diff(k-1) - b*y_diff(k-2) + c*pwm(k-1);
+end
 
 %% Geração dos gráficos
 subplot(611)
@@ -81,5 +91,6 @@ subplot(614)
 stem(t, pwm);
 subplot(615)
 plot(t, y);
-subplot(615)
-stem(m,w);
+subplot(616)
+plot(t, y_diff);
+
