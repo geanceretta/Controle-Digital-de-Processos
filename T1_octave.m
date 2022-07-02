@@ -39,38 +39,38 @@ y=zeros(1, NT+1);
 
 %Simulação
 for n=1:NT+1
-  h(n) = A_h.*sin(2*pi.*f_h.*(Ts*n)).*e.^(-100*(Ts*n));
+  h(n) = A_h.*sin(2*pi.*f_h.*(Ts*n)).*exp(1).^(-100*(Ts*n));
   s(n) = A_s.*sin(2*pi.*f_s.*(Ts*n));
   % Geração do PWM:
   nq = nq+1;
   if nq>NA
     st(n) = 0;
-  endif
+  end
   if nq == NA
     nq = 0;
-  endif
+  end
   st(n) = nq*(A_st_vpp/100)-(A_st_vpp/2);
   if s(n) > st(n)
     pwm(n) = A_cc;
   else
     pwm(n) = 0;
-  endif
+  end
   x(n)=pwm(n);                  % Sinal PWM como entrada do sistema
   for k=1:n                     % Convolução
     if (k<n)
       y(n) = y(n) + x(k) * h(n-k);
-    endif
-  endfor
+    end
+  end
 end
 
 %% Geração dos gráficos
 subplot(511)
-stem(t, h);
+plot(t, h);
 subplot(512)
-stem(t, s);
+plot(t, s);
 subplot(513)
 plot(t, st);
 subplot(514)
 stem(t, pwm);
 subplot(515);
-stem(t, y);
+plot(t, y);
